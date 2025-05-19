@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bajaj Bike Price List</title>
+    <link rel="stylesheet" href="styles/style.css">
+</head>
+<body>
+
+    <!-- Header with logos and title in a row -->
+    <div class="header-row">
+        <img src="photos/golchalogo.png" alt="Golchha Logo" class="logo">
+        <div class="header-text">
+            <h1>Sambriddhi & Brothers Auto Pvt. Ltd.</h1>
+            <p style="color:#220092;">Authorized Dealer of Bajaj</p>
+        </div>
+        <img src="photos/BajajLogo.png" alt="Bajaj Logo" class="logo">
+    </div>
+
+    <!-- rest of your body code... -->
+</div>
+    <meta charset="UTF-8">
+    <title>Bajaj Bike Price List</title>
+    <link rel="stylesheet" href="styles/style.css">
+</head>
+<body>
+
+    <!-- Header Section -->
+    <header>
+        <div style="margin-bottom: 10px;">
+        </div>
+        
+        
+    </header>
+
+        <div style="margin-bottom: 10px;">
+        </div>
+     
+    <!-- Navigation Menu -->
+    <nav>
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="EMI.html">EMI Calculations</a></li>
+            <li><a href="pricelist.html">Price List</a></li>
+        </ul>
+    </nav>
+
+    <!-- EMI Calculation Form -->
+    <h1>EMI Calculations</h1>
+
+    <label for="model">Select Bike Model:</label>
+    <select id="model" onchange="autoCalculate()">
+        <option value="">-- Select --</option>
+        <option value="212900">PLATINA 100 ES</option>
+        <option value="249900">DISCOVER 125 ST - 249,900</option>
+        <option value="254900">DISCOVER 125 ST - 254,900</option>
+        <option value="268900">PULSAR 125 NEON</option>
+        <option value="310900">PULSAR 150 SD</option>
+        <option value="329900">PULSAR 150 TD</option>
+        <option value="297900">PULSAR N 125</option>
+        <option value="371900">PULSAR N 150</option>
+        <option value="401900">PULSAR N 160 DC ABS BS6-UG1</option>
+        <option value="414900">PULSAR N 160 DC ABS BS6-UH2</option>
+        <option value="457900">PULSAR N 250 DC ABS BS6</option>
+        <option value="498900">PULSAR N 250 DC ABS BS6 (New)</option>
+        <option value="411900">PULSAR 220 F ABS</option>
+        <option value="297900">PULSAR 125 NS FI BS6</option>
+        <option value="392900">PULSAR 160 NS FI DC ABS BS6</option>
+        <option value="393900">PULSAR 200 NS ABS</option>
+        <option value="401900">PULSAR 200 NS FI ABS</option>
+        <option value="413900">PULSAR 200 NS FI ABS BS6</option>
+        <option value="446900">PULSAR 200 NS FI DC ABS BS6</option>
+        <option value="556900">PULSAR 400 NS Z BS6</option>
+        <option value="381900">AVENGER 160 STREET ABS</option>
+        <option value="424900">AVENGER 200 CRUSE</option>
+        <option value="615900">DOMINAR 400 ABS BS6</option>
+    </select>
+
+    <label for="tenure">Installment Months:</label>
+    <select id="tenure" onchange="autoCalculate()">
+        <option value="24">24 Months</option>
+        <option value="18">18 Months</option>
+        <option value="12">12 Months</option>
+    </select>
+
+    <label for="downpayment">Down Payment (%):</label>
+    <select id="downpayment" onchange="autoCalculate()">
+        <option value="50">50 Percent</option>
+        <option value="60">60 Percent</option>
+    </select>
+
+    <div id="details" class="hidden">
+        <label for="price">MRP:</label>
+        <input type="text" id="price" readonly>
+
+        <label for="interest">Interest Rate:</label>
+        <input type="text" id="interest" readonly>
+    </div>
+
+    <h2 id="resultTitle">Your Result</h2>
+    <div id="result"></div>
+
+    <!-- JavaScript -->
+    <script>
+        function autoCalculate() {
+            const model = document.getElementById('model');
+            const dp = document.getElementById('downpayment');
+            const tenure = document.getElementById('tenure');
+            const details = document.getElementById('details');
+
+            const price = parseFloat(model.value);
+            const dpPercent = parseFloat(dp.value);
+            let interestRate = 0;
+
+            // Show or hide MRP and interest fields
+            if (model.value && dp.value) {
+                details.classList.remove('hidden');
+            } else {
+                details.classList.add('hidden');
+            }
+
+            // Set MRP
+            document.getElementById('price').value = isNaN(price) ? '' : price;
+
+            // Set interest rate
+            if (dp.value === '50') interestRate = 11.99;
+            else if (dp.value === '60') interestRate = 9.99;
+            document.getElementById('interest').value = interestRate ? interestRate : '';
+
+            // Check all inputs
+            if (!price || !dpPercent || !interestRate || !tenure.value) {
+                document.getElementById('result').innerHTML = '';
+                document.getElementById('resultTitle').style.display = 'none';
+                return;
+            }
+
+            const modelName = model.options[model.selectedIndex].text;
+            const downpayment = price * dpPercent / 100;
+            const loanAmount = price - downpayment;
+            const months = parseInt(tenure.value);
+            const monthlyRate = interestRate / 12 / 100;
+
+            const emi = (loanAmount * monthlyRate * Math.pow(1 + monthlyRate, months)) /
+                        (Math.pow(1 + monthlyRate, months) - 1);
+
+            document.getElementById('resultTitle').style.display = 'block';
+            document.getElementById('result').innerHTML = `
+                <table>
+                    <tr><th>Model Name :</th><td>${modelName}</td></tr>
+                    <tr><th>Bike Price :</th><td>Rs. ${price.toFixed(2)}</td></tr>
+                    <tr><th>Down Payment :</th><td>Rs. ${downpayment.toFixed(2)}</td></tr>
+                    <tr><th>Loan Amount :</th><td>Rs. ${loanAmount.toFixed(2)}</td></tr>
+                    <tr><th>Interest Rate :</th><td>${interestRate} Percent</td></tr>
+                    <tr><th>Tenure (Months) :</th><td>${months} months</td></tr>
+                    <tr><th>Monthly EMI :</th><td>Rs. ${emi.toFixed(2)}</td></tr>
+                </table>
+            `;
+        }
+    </script>
+
+    <footer>
+        <p>Contact us at: <a href="https://www.facebook.com/profile.php?id=100039747472392" target="_blank">Facebook</a> | Phone: +977-9802315425</p>
+        <p>&copy; 2025 Sambriddhi & Brothers Auto Pvt. Ltd. | YNG</p>
+    </footer>
+
+</body>
+</html>
